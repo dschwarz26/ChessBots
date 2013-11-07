@@ -1,6 +1,6 @@
 # Template from Ryan Chiu.  See https://code.google.com/p/ics-bot-maker/
 
-import Connection
+import connection
 
 # Will open password.txt on the local directory (contains the password) and
 # returns the value. This makes it more secure and easy when sharing this code
@@ -12,20 +12,20 @@ def get_password_from_file():
 
 # Important configuration variables for bot. Change these to fit
 # your bot's user information
-LOGIN_CONFIG = {"server_host": "freechess.org",
+LOGIN_CONFIG = {"server_host": "chessclub.com",
                 "server_port": 5000,
                 "server_prompt": "fics%",
-                "username": "foo",
+                "username": "danieldelpaso",
                 "password": get_password_from_file(),
                 "buffer_size": 4096}
 
 # Set up connection using LOGIN_CONFIG dictionary values
-connection = Connection.Connection(LOGIN_CONFIG["server_host"],
+conn = connection.Connection(LOGIN_CONFIG["server_host"],
                                    LOGIN_CONFIG["server_port"],
                                    LOGIN_CONFIG["server_prompt"],
                                    LOGIN_CONFIG["username"],
                                    LOGIN_CONFIG["password"],
                                    LOGIN_CONFIG["buffer_size"])
-connection.connect()
+conn.connect()
 
 

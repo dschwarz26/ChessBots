@@ -19,7 +19,7 @@ class Connection:
         self.read_until('password: ')
         self.write_line(self.password)
 
-        self.read_until(self.username)
+        #self.read_until(self.username)
         self.connecting = False
         self.connected = True
         
