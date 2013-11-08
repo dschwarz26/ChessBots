@@ -1,14 +1,23 @@
 # Template from Ryan Chiu. See https://code.google.com/p/ics-bot-maker/
 
 import socket
+import sms
 
 class Connection:
 
-    # Pretty self-explanatory - simply connects to the ICS,
-    # enter username/password combo precisely when prompted
-    def connect(self):
-        self.sock.connect((self.server_host, self.server_port))
+    def __init__(self, server_host, server_port, server_prompt,
+                 username, password, buffer_size):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        self.buffer_size = buffer_size        
+        self.server_host = server_host
+        self.server_port = server_port
+        self.server_prompt = server_prompt
+        self.username = username
+        self.password = password
+        self.sock.connect((self.server_host, self.server_port))
+    
+    def connect(self, listening=False):
         # Print data until server prompts for a username, in which case it
         # will be entered.
         self.read_until('login: ')
@@ -24,26 +33,59 @@ class Connection:
         self.connected = True
         
         while self.connected:
-            self.read_line()
+            line = self.read_line()
+	    if listening:
+		self.process_line(line.strip())
 
-    def __init__(self, server_host, server_port, server_prompt,
-                 username, password, buffer_size):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def process_line(self, line):
+	if line.startswith('Game notification:'):
+	    self.handle_game_notification(line)
 
-        self.buffer_size = buffer_size        
-        self.server_host = server_host
-        self.server_port = server_port
-        self.server_prompt = server_prompt
-        self.username = username
-        self.password = password
+    #If the game notification is of high enough interest, send an SMS.
+    def handle_game_notification(self, notification):
+	tokens = notification.rsplit(' ')
+	player1 = tokens[2]
+	player1_rating = int(tokens[3].strip('()'))
+	player2 = tokens[5]
+	player2_rating = int(tokens[6].strip('()'))
+	time_control = tokens[8]
+	players = [player1.lower(), player2.lower()]
+	key_players = ['capilanobridge', 'adaptation', 'depressnyak',
+		'velimirovich', 'rafaello', 'dsquared', 'azerichess',
+		'mlraka', 'egor-geroev2']
 
-        # Some status booleans for ease of error handling
-        self.connected = False
-        self.connecting = False
+	for player in key_players:
+		if player in players:
+			self.send_message('%s is playing' % player)
+			return
+
+	if time_control == '3-minute':
+		if (player1_rating + player2_rating > 5000 or
+				max(player1_rating, player2_rating) > 2700):
+			self.send_message('3min game between %s (%s) and %s (%s)' % (
+				player1, player1_rating, player2, player2_rating))
+
+	elif time_control == '5-minute':
+		if (player1_rating + player2_rating > 5300 or
+				max(player1_rating, player2_rating) > 2800):			
+			self.send_message('5min game between %s (%s) and %s (%s)' % (
+				player1, player1_rating, player2, player2_rating))
+
+	elif time_control == 'blitz':
+		if (player1_rating + player2_rating > 6600 or
+				max(player1_rating, player2_rating) > 3400):
+			self.send_message('Blitz game between %s (%s) and %s (%s)' % (
+				player1, player1_rating, player2, player2_rating))
+
+    def send_message(self, message):
+	SMS = sms.SMS()
+	SMS.send_sms(message)
+	SMS.server.quit()
 
     def read_line(self):
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
         print recv
+	return recv
 
     def read_until(self, end_str):
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
