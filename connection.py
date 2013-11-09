@@ -2,6 +2,7 @@
 
 import socket
 import sms
+import datetime
 
 class Connection:
 
@@ -21,21 +22,22 @@ class Connection:
         # Print data until server prompts for a username, in which case it
         # will be entered.
         self.read_until('login: ')
-        self.connecting = True
         self.write_line(self.username)
 
         # Ditto for the password
         self.read_until('password: ')
         self.write_line(self.password)
 
-        #self.read_until(self.username)
-        self.connecting = False
-        self.connected = True
+	curr_time = datetime.datetime.utcnow()
         
-        while self.connected:
+	#If 59 minutes have passed, close the connection.
+        while (datetime.datetime.utcnow() - curr_time).seconds < 3540:
             line = self.read_line()
 	    if listening:
 		self.process_line(line.strip())
+
+	print("59 minutes have passed, connection closed")
+	self.sock.close()
 
     def process_line(self, line):
 	if line.startswith('Game notification:'):
