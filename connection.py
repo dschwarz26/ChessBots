@@ -1,7 +1,9 @@
 # Template from Ryan Chiu. See https://code.google.com/p/ics-bot-maker/
 
+from select import select
 import socket
 import sms
+import sys
 import datetime
 
 class Connection:
@@ -33,7 +35,7 @@ class Connection:
 	#If 59 minutes have passed, close the connection.
         while (datetime.datetime.utcnow() - curr_time).seconds < 3540:
             line = self.read_line()
-	    if listening:
+	    if line and listening:
 		self.process_line(line.strip())
 
 	print("59 minutes have passed, connection closed")
@@ -85,9 +87,16 @@ class Connection:
 	SMS.server.quit()
 
     def read_line(self):
-        recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
-        print recv
-	return recv
+	readlist, _, _ = select([self.sock, sys.stdin], [], [])
+	for sock in readlist:
+		if sock == sys.stdin:
+			command = sys.stdin.readline()
+			self.write_line(command)
+			print('Sending command: %s' % command)
+		if sock == self.sock:
+        		recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
+        		print recv
+			return recv
 
     def read_until(self, end_str):
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
