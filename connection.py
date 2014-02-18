@@ -19,7 +19,10 @@ class Connection:
         self.username = username
         self.password = password
         self.sock.connect((self.server_host, self.server_port))
-    
+   
+	self.sms = sms.SMS() 
+	#self.send_message('Started up!')
+
     def connect(self, listening=False):
         # Print data until server prompts for a username, in which case it
         # will be entered.
@@ -49,9 +52,15 @@ class Connection:
     def handle_game_notification(self, notification):
 	tokens = notification.rsplit(' ')
 	player1 = tokens[2]
-	player1_rating = int(tokens[3].strip('()'))
+	try:
+		player1_rating = int(tokens[3].strip('()'))
+	except ValueError:
+		player1_rating = 0
 	player2 = tokens[5]
-	player2_rating = int(tokens[6].strip('()'))
+	try:
+		player2_rating = int(tokens[6].strip('()'))
+	except ValueError:
+		player2_rating = 0
 	time_control = tokens[8]
 	players = [player1.lower(), player2.lower()]
 	key_players = ['capilanobridge', 'adaptation', 'depressnyak',
@@ -64,27 +73,26 @@ class Connection:
 			return
 
 	if time_control == '3-minute':
-		if (player1_rating + player2_rating > 5000 or
-				max(player1_rating, player2_rating) > 2700):
-			self.send_message('3min game between %s (%s) and %s (%s)' % (
+		if (player1_rating + player2_rating > 4600 or
+				max(player1_rating, player2_rating) > 2600):
+			self.send_message('%s(%d) vs. %s(%d) 3min' % (
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == '5-minute':
-		if (player1_rating + player2_rating > 5300 or
-				max(player1_rating, player2_rating) > 2800):			
-			self.send_message('5min game between %s (%s) and %s (%s)' % (
+		if (player1_rating + player2_rating > 4800 or
+				max(player1_rating, player2_rating) > 2700):			
+			self.send_message('%s(%d) vs. %s(%d) 5min' % (
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == 'blitz':
-		if (player1_rating + player2_rating > 6600 or
-				max(player1_rating, player2_rating) > 3400):
-			self.send_message('Blitz game between %s (%s) and %s (%s)' % (
+		if (player1_rating + player2_rating > 6200 or
+				max(player1_rating, player2_rating) > 3300):
+			self.send_message('%s(%d) vs %s(%d) blitz' % (
 				player1, player1_rating, player2, player2_rating))
 
     def send_message(self, message):
-	SMS = sms.SMS()
-	SMS.send_sms(message)
-	SMS.server.quit()
+	self.sms.send_sms(message)
+	#SMS.server.quit()
 
     def read_line(self):
 	readlist, _, _ = select([self.sock, sys.stdin], [], [])
@@ -92,7 +100,7 @@ class Connection:
 		if sock == sys.stdin:
 			command = sys.stdin.readline()
 			self.write_line(command)
-			print('Sending command: %s' % command)
+			#print('Sending command: %s' % command)
 		if sock == self.sock:
         		recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
         		print recv

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Template from Ryan Chiu.  See https://code.google.com/p/ics-bot-maker/
 
 import connection
