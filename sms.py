@@ -9,7 +9,7 @@ class SMS:
 		#self.server.starttls()
 		self.email = 'danielschwarz26@gmail.com'
 		#self.password = utils.get_from_file('gmail_password.txt')
-		self.phone_number = utils.get_from_file('phone_number.txt')
+		self.phone_number = utils.get_from_file('/home/ec2-user/ChessBots/phone_number.txt')
 		#self.server.login(self.email, self.password)
 
 	#Works only for AT&T phones.

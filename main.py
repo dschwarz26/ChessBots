@@ -10,7 +10,7 @@ LOGIN_CONFIG = {"server_host": "chessclub.com",
                 "server_port": 5000,
                 "server_prompt": "fics%",
                 "username": "danieldelpaso",
-                "password": utils.get_from_file('icc_password.txt'),
+                "password": utils.get_from_file('/home/ec2-user/ChessBots/icc_password.txt'),
                 "buffer_size": 4096}
 
 # Set up connection using LOGIN_CONFIG dictionary values
