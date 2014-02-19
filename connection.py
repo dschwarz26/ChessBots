@@ -73,13 +73,13 @@ class Connection:
 			return
 
 	if time_control == '3-minute':
-		if (player1_rating + player2_rating > 4600 or
+		if (player1_rating + player2_rating > 4800 or
 				max(player1_rating, player2_rating) > 2600):
 			self.send_message('%s(%d) vs. %s(%d) 3min' % (
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == '5-minute':
-		if (player1_rating + player2_rating > 4800 or
+		if (player1_rating + player2_rating > 5000 or
 				max(player1_rating, player2_rating) > 2700):			
 			self.send_message('%s(%d) vs. %s(%d) 5min' % (
 				player1, player1_rating, player2, player2_rating))
