@@ -65,7 +65,7 @@ class Connection:
 	players = [player1.lower(), player2.lower()]
 	key_players = ['capilanobridge', 'adaptation', 'depressnyak',
 		'velimirovich', 'rafaello', 'dsquared', 'azerichess',
-		'mlraka', 'egor-geroev2']
+		'mlraka', 'egor-geroev2', 'andreagassi']
 
 	for player in key_players:
 		if player in players:
