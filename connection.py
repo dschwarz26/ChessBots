@@ -85,8 +85,7 @@ class Connection:
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == 'blitz':
-		if (player1_rating + player2_rating > 6400 or
-				max(player1_rating, player2_rating) > 3300):
+		if player1_rating + player2_rating > 6400:
 			self.send_message('%s(%d) vs %s(%d) blitz' % (
 				player1, player1_rating, player2, player2_rating))
 
