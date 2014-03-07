@@ -69,7 +69,7 @@ class Connection:
 
 	for player in key_players:
 		if player in players:
-			self.send_message('%s is playing' % player)
+			self.send_message('%s is playing!' % player)
 			return
 
 	if time_control == '3-minute':
@@ -85,13 +85,25 @@ class Connection:
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == 'blitz':
-		if player1_rating + player2_rating > 6400:
+		if player1_rating + player2_rating > 3400:
 			self.send_message('%s(%d) vs %s(%d) blitz' % (
 				player1, player1_rating, player2, player2_rating))
 
+    def is_online(self, player):
+	self.write_line('finger ' + player)
+	lines = []
+	for _ in range(3):
+		lines.append(self.read_line())
+	for line in lines:
+		if 'Statistics' in line:
+			return True
+	return False
+
     def send_message(self, message):
+	#If danieldelpaso is online, don't send the message.
+	if self.is_online('danieldelpaso'):
+		return
 	self.sms.send_sms(message)
-	#SMS.server.quit()
 
     def read_line(self):
 	readlist, _, _ = select([self.sock, sys.stdin], [], [])
@@ -108,20 +120,9 @@ class Connection:
     def read_until(self, end_str):
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
         while end_str not in str(recv):
-            print recv
+        	print recv
 
     def write_line(self, str):
-        str += "\n"
+    	str += "\n"
         self.sock.send(str)
 
-    # Some getter/setter methods that I thought might be necessary
-    def get_server_host(self): return self.server_host
-    def get_server_prompt(self): return self.server_prompt
-    def get_server_port(self): return self.server_port
-
-    def is_connected(self): return self.connected
-    def is_connecting(self): return self.connecting
-    
-    def set_server_host(self, host): self.server_host = host
-    def set_server_prompt(self, prompt): self.server_prompt = prompt
-    def set_server_port(self, port): self.server_port = port
