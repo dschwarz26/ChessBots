@@ -95,8 +95,9 @@ class Connection:
 	for _ in range(3):
 		lines.append(self.read_line())
 	for line in lines:
-		if 'Statistics' in line:
-			return True
+		if line:
+			if 'Statistics' in line:
+				return True
 	return False
 
     def send_message(self, message):
