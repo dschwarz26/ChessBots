@@ -9,7 +9,7 @@ import datetime
 class Connection:
 
     def __init__(self, server_host, server_port, server_prompt,
-                 username, password, buffer_size):
+                 username, password, buffer_size, preferences):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.buffer_size = buffer_size        
@@ -19,8 +19,8 @@ class Connection:
         self.username = username
         self.password = password
         self.sock.connect((self.server_host, self.server_port))
-   
-	self.sms = sms.SMS() 
+        self.sms = sms.SMS()
+        self.min_5, self.min_3, self.min_blitz = (preferences.min_5, preferences.min_3, preferences.min_blitz)
 	#self.send_message('Started up!')
 
     def connect(self, listening=False):
@@ -73,19 +73,19 @@ class Connection:
 			return
 
 	if time_control == '3-minute':
-		if (player1_rating + player2_rating > 4900 or
+		if (player1_rating + player2_rating > self.min_3 or
 				max(player1_rating, player2_rating) > 2600):
 			self.send_message('%s(%d) vs. %s(%d) 3min' % (
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == '5-minute':
-		if (player1_rating + player2_rating > 5100 or
+		if (player1_rating + player2_rating > self.min_5 or
 				max(player1_rating, player2_rating) > 2700):			
 			self.send_message('%s(%d) vs. %s(%d) 5min' % (
 				player1, player1_rating, player2, player2_rating))
 
 	elif time_control == 'blitz':
-		if player1_rating + player2_rating > 6400:
+		if player1_rating + player2_rating > self.min_blitz:
 			self.send_message('%s(%d) vs %s(%d) blitz' % (
 				player1, player1_rating, player2, player2_rating))
 

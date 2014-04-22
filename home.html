@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    <form action="/" method="post">
+      Min 5-min:<div><textarea name="5min" rows="1" cols="10"></textarea></div>
+      Min 3-min:<div><textarea name="3min" rows="1" cols="10"></textarea></div>
+      Min blitz:<div><textarea name="blitz" rows="1" cols="10"></textarea></div>
+      <div><input type="submit" value="Update preferences"></div>
+    </form>
+  </body>
+</html>
+{% endautoescape %}
