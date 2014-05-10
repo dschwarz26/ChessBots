@@ -1,18 +1,17 @@
 # Template from Ryan Chiu. See https://code.google.com/p/ics-bot-maker/
 
-from select import select
-import asyncore
 import socket
 import sms
 import sys
 import datetime
 
-class Connection:
+class Connection(asyncore.dispatcher):
 
   def __init__(self, server_host, server_port, server_prompt,
                username, password, buffer_size, preferences):
-    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+    asyncore.dispatcher.__init__(self)
+    self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.connect((host, 80))
     self.buffer_size = buffer_size        
     self.server_host = server_host
     self.server_port = server_port
@@ -87,7 +86,12 @@ class Connection:
     SMS.send_sms(message)
     SMS.server.quit()
 
+  #Select doesn't work on GAE.
   def read_line(self):
+    recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
+    print recv
+    return recv
+    '''
     readlist, _, _ = select([self.sock, sys.stdin], [], [])
     for sock in readlist:
       if sock == sys.stdin:
@@ -98,7 +102,7 @@ class Connection:
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
         print recv
         return recv
-
+    '''
   def read_until(self, end_str):
     recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
     while end_str not in str(recv):

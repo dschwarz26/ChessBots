@@ -27,4 +27,5 @@ def run():
                                    LOGIN_CONFIG["preferences"])
   conn.connect(listening=True)
 
-
+if __name__ == '__main__':
+   run()
