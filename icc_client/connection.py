@@ -9,7 +9,6 @@ class Connection(asyncore.dispatcher):
 
   def __init__(self, server_host, server_port, server_prompt,
                username, password, buffer_size, preferences):
-    asyncore.dispatcher.__init__(self)
     self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
     self.connect((host, 80))
     self.buffer_size = buffer_size        
@@ -20,6 +19,7 @@ class Connection(asyncore.dispatcher):
     self.password = password
     self.preferences = preferences
     self.sock.connect((self.server_host, self.server_port))
+    self.send_message('test!!!')
     
   def connect(self, listening=False):
     # Print data until server prompts for a username, in which case it
@@ -33,20 +33,20 @@ class Connection(asyncore.dispatcher):
 
     curr_time = datetime.datetime.utcnow()
         
-    #If 59 minutes have passed, close the connection.
-    while (datetime.datetime.utcnow() - curr_time).seconds < 3540:
+    #If almost 10 minutes have passed, close the connection.
+    while (datetime.datetime.utcnow() - curr_time).seconds < 590:
       line = self.read_line()
       if line and listening:
          self.process_line(line.strip())
 
-    print("59 minutes have passed, connection closed")
+    print("10 minutes have passed, connection closed")
     self.sock.close()
 
   def process_line(self, line):
     if line.startswith('Game notification:'):
       self.handle_game_notification(line)
 
-    #If the game notification is of high enough interest, send an SMS.
+  #If the game notification is of high enough interest, send an SMS.
   def handle_game_notification(self, notification):
     tokens = notification.rsplit(' ')
     player1 = tokens[2]
@@ -84,7 +84,6 @@ class Connection(asyncore.dispatcher):
   def send_message(self, message):
     SMS = sms.SMS()
     SMS.send_sms(message)
-    SMS.server.quit()
 
   #Select doesn't work on GAE.
   def read_line(self):

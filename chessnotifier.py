@@ -4,7 +4,7 @@ import jinja2
 import cgi
 import update_preferences
 
-#from icc_client import main
+from icc_client import main
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -27,6 +27,12 @@ class MainPage(webapp2.RequestHandler):
     self.response.write('Preferences updated.')
     #self.response.write(self.template.render(self.template_values))
 
+class Connection(webapp2.RequestHandler):
+  
+  def get(self):
+    main.run()  
+
 application = webapp2.WSGIApplication([
 	('/', MainPage),
+  ('/connect', Connection),
 ], debug = True)
