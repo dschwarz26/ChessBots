@@ -5,12 +5,11 @@ import sms
 import sys
 import datetime
 
-class Connection(asyncore.dispatcher):
+class Connection:
 
   def __init__(self, server_host, server_port, server_prompt,
                username, password, buffer_size, preferences):
-    self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.connect((host, 80))
+    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.buffer_size = buffer_size        
     self.server_host = server_host
     self.server_port = server_port

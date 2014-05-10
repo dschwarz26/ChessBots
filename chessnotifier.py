@@ -4,7 +4,7 @@ import jinja2
 import cgi
 import update_preferences
 
-from icc_client import main
+import main
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

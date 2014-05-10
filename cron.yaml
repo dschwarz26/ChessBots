@@ -1,4 +1,4 @@
 cron:
 - description: Start icc_connection
   url: /connect
-  schedule: every 10 mins
+  schedule: every 6 hours
