@@ -3,8 +3,8 @@ import webapp2
 import jinja2
 import cgi
 import update_preferences
-
 import main
+from icc_client import utils
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

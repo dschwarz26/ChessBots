@@ -15,7 +15,7 @@ class Connection:
     self.server_port = server_port
     self.server_prompt = server_prompt
     self.username = username
-    self.password = password
+    self.password = password.password
     self.preferences = preferences
     self.sock.connect((self.server_host, self.server_port))
     self.send_message('test!!!')
@@ -64,19 +64,19 @@ class Connection:
         return
 
     if time_control == '3-minute':
-      if (player1_rating + player2_rating > self.preferences['min_3'] or
+      if (player1_rating + player2_rating > self.preferences.min_3 or
           max(player1_rating, player2_rating) > 2700):
         self.send_message('3min game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 
     elif time_control == '5-minute':
-      if (player1_rating + player2_rating > self.preferences['min_5'] or
+      if (player1_rating + player2_rating > self.preferences.min_5 or
           max(player1_rating, player2_rating) > 2800):      
         self.send_message('5min game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 
     elif time_control == 'blitz':
-      if player1_rating + player2_rating > self.preferences['min_blitz']:
+      if player1_rating + player2_rating > self.preferences.min_blitz:
         self.send_message('Blitz game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 

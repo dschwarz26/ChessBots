@@ -1,5 +1,13 @@
 # Helpful things.
+from google.appengine.ext import ndb
 
-def get_from_file(f):
-	reader = open(f, 'r')
-	return reader.readline()
+class Password(ndb.Model):
+  name = ndb.StringProperty()
+  password = ndb.StringProperty()
+
+def run(pswd):
+  password = Password()
+  password.name = "icc_password"
+  password.password = pswd
+  password.put()
+
