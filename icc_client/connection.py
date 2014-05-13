@@ -18,7 +18,6 @@ class Connection:
     self.password = password.password
     self.preferences = preferences
     self.sock.connect((self.server_host, self.server_port))
-    self.send_message('test!!!')
     
   def connect(self, listening=False):
     # Print data until server prompts for a username, in which case it
@@ -86,7 +85,10 @@ class Connection:
 
   #Select doesn't work on GAE.
   def read_line(self):
-    recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
+    try:
+      recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
+    except:
+      return None
     print recv
     return recv
     '''
