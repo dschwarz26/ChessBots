@@ -57,6 +57,10 @@ class Connection:
       'velimirovich', 'rafaello', 'dsquared', 'azerichess',
       'mlraka', 'egor-geroev2']
 
+    contact = Contact.query(Contact.name == 'Dan').fetch()[0]
+    #to do: put preferences in the contact
+    #for contact in contacts:
+    
     for player in key_players:
       if player in players:
         self.send_message('%s is playing' % player)
@@ -65,23 +69,23 @@ class Connection:
     if time_control == '3-minute':
       if (player1_rating + player2_rating > self.preferences.min_3 or
           max(player1_rating, player2_rating) > 2700):
-        self.send_message('3min game between %s (%s) and %s (%s)' % (
+        self.send_message(contact.phone_number, '3min game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 
     elif time_control == '5-minute':
       if (player1_rating + player2_rating > self.preferences.min_5 or
           max(player1_rating, player2_rating) > 2800):      
-        self.send_message('5min game between %s (%s) and %s (%s)' % (
+        self.send_message(contact.phone_number, '5min game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 
     elif time_control == 'blitz':
       if player1_rating + player2_rating > self.preferences.min_blitz:
-        self.send_message('Blitz game between %s (%s) and %s (%s)' % (
+        self.send_message(contact.phone_number, 'Blitz game between %s (%s) and %s (%s)' % (
           player1, player1_rating, player2, player2_rating))
 
-  def send_message(self, message):
+  def send_message(self, phone_number, message):
     SMS = sms.SMS()
-    SMS.send_sms(message)
+    SMS.send_sms(phone_number, message)
 
   #Select doesn't work on GAE.
   def read_line(self):

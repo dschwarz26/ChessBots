@@ -5,9 +5,6 @@ class Password(ndb.Model):
   name = ndb.StringProperty()
   password = ndb.StringProperty()
 
-def run(pswd):
-  password = Password()
-  password.name = "icc_password"
-  password.password = pswd
-  password.put()
-
+class Contact(ndb.Model):
+  name = ndb.StringProperty()
+  phone_number = ndb.StringProperty()

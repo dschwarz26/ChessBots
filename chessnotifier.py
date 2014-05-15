@@ -4,7 +4,7 @@ import jinja2
 import cgi
 import update_preferences
 import main
-from icc_client import utils
+from icc_client.utils import Contact
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -13,11 +13,14 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
 
-  template = JINJA_ENVIRONMENT.get_template('home.html')
-  template_values = {}
-
   def get(self):
-    self.response.write(self.template.render(self.template_values))
+    phone_number = Contact.query(Contact.name == 'Dan').fetch()[0].phone_number
+    template = JINJA_ENVIRONMENT.get_template('home.html')
+    template_values = {
+    "phone_number": phone_number,
+    "time_windows": None, 
+    }   
+    self.response.write(template.render(template_values))
 
   def post(self):
     min_5 = int(cgi.escape(self.request.get('5min')))
@@ -25,7 +28,7 @@ class MainPage(webapp2.RequestHandler):
     min_blitz = int(cgi.escape(self.request.get('blitz')))
     update_preferences.write_preferences(min_5, min_3, min_blitz)
     self.response.write('Preferences updated.')
-    #self.response.write(self.template.render(self.template_values))
+    #self.response.write(template.render(template_values))
 
 class Connection(webapp2.RequestHandler):
   
