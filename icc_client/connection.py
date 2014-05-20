@@ -37,13 +37,14 @@ class Connection:
     self.write_line('tell danieldelpaso hi! %s' % datetime.datetime.utcnow())
     
     logging.info('Connected!')    
-    #If almost 5 minutes have passed, close the connection.
-    while (datetime.datetime.utcnow() - curr_time).seconds < 290:
+    #If almost 10 minutes have passed, close the connection.
+    while (datetime.datetime.utcnow() - curr_time).seconds < 590:
      line = self.read_line()
      if line and listening:
-         self.process_line(line.strip())
+       logging.info(line)
+       self.process_line(line.strip())
 
-    logging.info("5 minutes have passed, connection closed")
+    logging.info("10 minutes have passed, connection closed")
     self.sock.close()
 
   def process_line(self, line):
@@ -99,7 +100,6 @@ class Connection:
       recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
     except:
       return None
-    logging.info(recv)
     return recv
     '''
     readlist, _, _ = select([self.sock, sys.stdin], [], [])
