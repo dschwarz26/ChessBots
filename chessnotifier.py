@@ -4,6 +4,7 @@ import jinja2
 import cgi
 import update_preferences
 import main
+import logging
 from icc_client.utils import Contact
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -39,3 +40,7 @@ application = webapp2.WSGIApplication([
 	('/', MainPage),
   ('/connect', Connection),
 ], debug = True)
+
+logging.getLogger().setLevel(logging.DEBUG)
+
+

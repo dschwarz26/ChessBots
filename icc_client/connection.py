@@ -1,9 +1,12 @@
 # Template from Ryan Chiu. See https://code.google.com/p/ics-bot-maker/
 
+import logging
 import socket
 import sms
 import sys
 import datetime
+
+#from utils import Contact
 
 class Connection:
 
@@ -30,14 +33,17 @@ class Connection:
     self.write_line(self.password)
 
     curr_time = datetime.datetime.utcnow()
-        
-    #If almost 10 minutes have passed, close the connection.
-    while (datetime.datetime.utcnow() - curr_time).seconds < 590:
-      line = self.read_line()
-      if line and listening:
+    
+    self.write_line('tell danieldelpaso hi! %s' % datetime.datetime.utcnow())
+    
+    logging.info('Connected!')    
+    #If almost 5 minutes have passed, close the connection.
+    while (datetime.datetime.utcnow() - curr_time).seconds < 290:
+     line = self.read_line()
+     if line and listening:
          self.process_line(line.strip())
 
-    print("10 minutes have passed, connection closed")
+    logging.info("5 minutes have passed, connection closed")
     self.sock.close()
 
   def process_line(self, line):
@@ -57,7 +63,7 @@ class Connection:
       'velimirovich', 'rafaello', 'dsquared', 'azerichess',
       'mlraka', 'egor-geroev2']
 
-    contact = Contact.query(Contact.name == 'Dan').fetch()[0]
+    #contact = Contact.query(Contact.name == 'Dan').fetch()[0]
     #to do: put preferences in the contact
     #for contact in contacts:
     
@@ -93,7 +99,7 @@ class Connection:
       recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
     except:
       return None
-    print recv
+    logging.info(recv)
     return recv
     '''
     readlist, _, _ = select([self.sock, sys.stdin], [], [])
@@ -101,16 +107,16 @@ class Connection:
       if sock == sys.stdin:
         command = sys.stdin.readline()
         self.write_line(command)
-        print('Sending command: %s' % command)
+        logging.info('Sending command: %s' % command)
       if sock == self.sock:
         recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
-        print recv
+        logging.info(recv)
         return recv
     '''
   def read_until(self, end_str):
     recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
     while end_str not in str(recv):
-      print recv
+      logging.info(recv)
 
   def write_line(self, str):
     str += "\n"
