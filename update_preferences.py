@@ -1,19 +1,15 @@
 from google.appengine.ext import ndb
+from icc_client.utils import User
+import logging
 
-class Preferences(ndb.Model):
-  name = ndb.StringProperty()
-  min_5 = ndb.IntegerProperty()
-  min_3 = ndb.IntegerProperty()
-  min_blitz = ndb.IntegerProperty()
+def write_preferences(name, min_5, min_3, min_blitz):
+  try:
+    user = User.query(User.name == name).fetch()[0]
+    user.min_5 = min_5
+    user.min_3 = min_3
+    user.min_blitz = min_blitz
+    user.put()
 
-def write_preferences(min_5, min_3, min_blitz):
-  preferences = Preferences.query(Preferences.name == 'Main Preferences').fetch()
-  if preferences:
-    preferences = preferences[0]
-  else:
-    preferences = Preferences()
-    preferences.name = 'Main Preferences'
-  preferences.min_5 = min_5
-  preferences.min_3 = min_3
-  preferences.min_blitz = min_blitz
-  preferences.put()
+  except IndexError:
+    logging.error('Tried to update preferences for unknown user: %s' % name)
+  
