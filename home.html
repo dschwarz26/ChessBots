@@ -3,7 +3,7 @@
 <html>
   <body>
     <h2>Welcome to ChessNotifier! Update your preferences here.</h2>
-    Phone number: {{phone_number}}
+    <!-- Phone number: {{phone_number}} --!>
     <form action="/" method="post">
     <!-- ... radio buttons ...--!>
       Name:<div><textarea name="Name" rows="1" cols="10"></textarea></div>
@@ -11,6 +11,7 @@
       Min 3-min:<div><textarea name="3min" rows="1" cols="10"></textarea></div>
       Min blitz:<div><textarea name="blitz" rows="1" cols="10"></textarea></div>
       <div><input type="submit" value="Update preferences"></div>
+      Notifications will use SendGrid.
     </form>
   </body>
 </html>

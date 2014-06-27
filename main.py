@@ -7,7 +7,7 @@ def run():
   # your bot's user information
   LOGIN_CONFIG = {"server_host": "chessclub.com",
                   "server_port": 5000,
-                  "server_prompt": "fics%",
+                  "server_prompt": "aics%",
                   "username": "ddpbot",
                   "password": utils.Password.query(
                     utils.Password.name == 'icc_password').fetch()[0],

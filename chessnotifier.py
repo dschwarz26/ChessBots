@@ -5,6 +5,8 @@ import cgi
 import update_preferences
 import main
 import logging
+import sendgrid
+
 from icc_client.utils import User
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -28,9 +30,9 @@ class MainPage(webapp2.RequestHandler):
     min_5 = int(cgi.escape(self.request.get('5min')))
     min_3 = int(cgi.escape(self.request.get('3min')))
     min_blitz = int(cgi.escape(self.request.get('blitz')))
-    logging.info('Got an update preferences request with the following info:')
-    logging.info('Name: %s' % name)
-    logging.info('min_5: %d, min_3: %d, min_blitz: %d' % (min_5, min_3, min_blitz))
+    logging.debug('Got an update preferences request with the following info:')
+    logging.debug('Name: %s' % name)
+    logging.debug('min_5: %d, min_3: %d, min_blitz: %d' % (min_5, min_3, min_blitz))
     update_preferences.write_preferences(name, min_5, min_3, min_blitz)
     self.response.write('%s: your preferences have been updated.' % name)
     #self.response.write(template.render(template_values))
