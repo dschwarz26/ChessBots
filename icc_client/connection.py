@@ -6,14 +6,14 @@ import sys
 import datetime
 from notification import Notifier
 
-#from utils import Contact
+from google.appengine import runtime
 
 class Connection:
 
   def __init__(self, server_host, server_port, server_prompt,
                username, password, buffer_size):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.sock.settimeout(30)
+    self.sock.settimeout(300)
     self.buffer_size = buffer_size        
     self.server_host = server_host
     self.server_port = server_port
@@ -38,15 +38,18 @@ class Connection:
     self.write_line('tell danieldelpaso hi! %s' % datetime.datetime.utcnow())
     
     logging.debug('Connected!')    
+
     #If almost 60 minutes have passed, close the connection.
     while (datetime.datetime.utcnow() - curr_time).seconds < 3540:
-     line = self.read_line()
-     if line and listening:
-       logging.info(line)
-       self.process_line(line.strip())
+      try:  
+        line = self.read_line()
+        if line and listening:
+          logging.info(line)
+          self.process_line(line.strip())
+      except runtime.DeadlineExceededError:
+        logging.debug('Deadline Exceeded Error')
 
     logging.debug("59 minutes have passed, connection restarting")
-    self.connect(listening=True)
 
   def process_line(self, line):
     if line.startswith('Game notification:'):
@@ -57,7 +60,7 @@ class Connection:
     try:
       recv = self.sock.recv(self.buffer_size).replace(self.server_prompt, "")
     except:
-      logging.warning('Failed to read line.')
+      logging.debug('Failed to read line.')
       return None
     return recv
     '''
