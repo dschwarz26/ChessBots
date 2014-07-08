@@ -13,6 +13,7 @@ class Connection:
   def __init__(self, server_host, server_port, server_prompt,
                username, password, buffer_size):
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.sock.settimeout(30)
     self.buffer_size = buffer_size        
     self.server_host = server_host
     self.server_port = server_port
@@ -21,7 +22,7 @@ class Connection:
     self.password = password.password
     self.sock.connect((self.server_host, self.server_port))
     self.notifier = Notifier()
-    
+
   def connect(self, listening=False):
     # Print data until server prompts for a username, in which case it
     # will be entered.
@@ -37,15 +38,15 @@ class Connection:
     self.write_line('tell danieldelpaso hi! %s' % datetime.datetime.utcnow())
     
     logging.debug('Connected!')    
-    #If almost 10 minutes have passed, close the connection.
-    while (datetime.datetime.utcnow() - curr_time).seconds < 590:
+    #If almost 60 minutes have passed, close the connection.
+    while (datetime.datetime.utcnow() - curr_time).seconds < 3540:
      line = self.read_line()
      if line and listening:
        logging.info(line)
        self.process_line(line.strip())
 
-    logging.debug("10 minutes have passed, connection closed")
-    self.sock.close()
+    logging.debug("59 minutes have passed, connection restarting")
+    self.connect(listening=True)
 
   def process_line(self, line):
     if line.startswith('Game notification:'):

@@ -15,7 +15,8 @@ class SMS:
 
   #Works only for T-Mobile phones.
   def send_sms(self, phone_number, text):
-    recipient = phone_number + '@tmomail.net' # self.email
+    #recipient = phone_number + '@tmomail.net' # self.email
+    recipient = 'danielschwarz26@gmail.com'
     message = sendgrid.Mail(
       to=recipient,
       subject='ICC Notification',
