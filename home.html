@@ -4,15 +4,40 @@
   <body>
     <h2>Welcome to ChessNotifier! Update your preferences here.</h2>
     <!-- Phone number: {{phone_number}} --!>
-    <form action="/" method="post">
-    <!-- ... radio buttons ...--!>
-      Name:<div><textarea name="Name" rows="1" cols="10"></textarea></div>
-      Min 5-min:<div><textarea name="5min" rows="1" cols="10"></textarea></div>
-      Min 3-min:<div><textarea name="3min" rows="1" cols="10"></textarea></div>
-      Min blitz:<div><textarea name="blitz" rows="1" cols="10"></textarea></div>
-      <div><input type="submit" value="Update preferences"></div>
-      Notifications will use SendGrid.
-    </form>
+      <form action="/" method="post">
+        Name:<div><textarea name="Name" rows="1" cols="10"></textarea></div>
+        <div><br>
+          <table border="1">
+            <col width="">
+            <col width="80">
+            <col width="80">
+            <col width="80">
+            <tr>
+              <th>Time Control</th>
+              <th>Morning</th>
+              <th>Afternoon</th>
+              <th>Evening</th>
+            <tr>
+              <td>5 Minute</td>
+              <td><div><textarea name="min_5 morning" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_5 afternoon" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_5 evening" rows="1" cols="5"></textarea></div></td>
+            <tr>
+              <td>3 Minute</td>
+              <td><div><textarea name="min_3 morning" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_3 afternoon" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_3 evening" rows="1" cols="5"></textarea></div></td>
+            <tr> 
+              <td>Blitz</td>
+              <td><div><textarea name="min_blitz morning" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_blitz afternoon" rows="1" cols="5"></textarea></div></td>
+              <td><div><textarea name="min_blitz evening" rows="1" cols="5"></textarea></div></td> 
+          </table>
+        </div><br>
+        <div><input type="submit" value = "Update preferences"></div>
+      </form>
+    <br>
+    Notifications will use SendGrid.
   </body>
 </html>
 {% endautoescape %}

@@ -1,6 +1,8 @@
-from utils import User
 import logging
 import sms
+
+from time import strftime
+from utils import User
 
 class Notifier:
   
@@ -23,6 +25,9 @@ class Notifier:
       'velimirovich', 'rafaello', 'dsquared', 'azerichess',
       'mlraka', 'egor-geroev2', 'adaptation']
 
+    hour = int(strftime('%H'))
+    logging.info('HOUR: %d' % hour)
+
     for user in self.users:
 
       for player in key_players:
@@ -33,7 +38,7 @@ class Notifier:
       #self.send_message(user.phone_number, 'test')
       #logging.debug('Sent message to %s at %s' % (user.name, user.phone_number))
       if time_control == '3-minute':
-        if (player1_rating + player2_rating > user.min_3 or
+        if (player1_rating + player2_rating > user.min_3[hour] or
             max(player1_rating, player2_rating) > 2700):
           self.send_message(user.phone_number, '3min game between %s (%s) and %s (%s)' % (
               player1, player1_rating, player2, player2_rating))
@@ -41,14 +46,14 @@ class Notifier:
               user.name, user.phone_number))
 
       elif time_control == '5-minute':
-        if (player1_rating + player2_rating > user.min_5 or
+        if (player1_rating + player2_rating > user.min_5[hour] or
             max(player1_rating, player2_rating) > 2800):      
           self.send_message(user.phone_number, '5min game between %s (%s) and %s (%s)' % (
             player1, player1_rating, player2, player2_rating))
           logging.debug('Sent message to %s about 5min game' % user.name)
 
       elif time_control == 'blitz':
-        if player1_rating + player2_rating > user.min_blitz:
+        if player1_rating + player2_rating > user.min_blitz[hour]:
           self.send_message(user.phone_number, 'Blitz game between %s (%s) and %s (%s)' % (
             player1, player1_rating, player2, player2_rating))
           logging.debug('Sent message to %s about blitz game' % user.name)

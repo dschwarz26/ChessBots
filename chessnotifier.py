@@ -2,12 +2,10 @@ import os
 import webapp2
 import jinja2
 import cgi
-import update_preferences
 import main
 import logging
 import sendgrid
-
-from icc_client.utils import User
+import icc_client.utils
 
 JINJA_ENVIRONMENT = jinja2.Environment(
   loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -16,26 +14,41 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
 
+  def read(self, name):
+    return cgi.escape(self.request.get(name))
+
   def get(self):
-    phone_number = User.query(User.name == 'Dan').fetch()[0].phone_number
+    #phone_number = User.query(User.name == 'Dan').fetch()[0].phone_number
     template = JINJA_ENVIRONMENT.get_template('home.html')
     template_values = {
-    "phone_number": phone_number,
-    "time_windows": None, 
+    #"phone_number": phone_number,
     }   
     self.response.write(template.render(template_values))
 
   def post(self):
-    name = cgi.escape(self.request.get('Name'))
-    min_5 = int(cgi.escape(self.request.get('5min')))
-    min_3 = int(cgi.escape(self.request.get('3min')))
-    min_blitz = int(cgi.escape(self.request.get('blitz')))
+    name = self.read('Name')
+    morning = {
+      'min_5': self.read('min_5 morning'),
+      'min_3': self.read('min_3 morning'),
+      'min_blitz': self.read('min_blitz morning'),
+    }
+    afternoon = {
+      'min_5': self.read('min_5 afternoon'),
+      'min_3': self.read('min_3 afternoon'),
+      'min_blitz': self.read('min_blitz afternoon'),
+    } 
+    evening = {
+      'min_5': self.read('min_5 evening'),
+      'min_3': self.read('min_3 evening'),
+      'min_blitz': self.read('min_blitz evening'),
+    }
     logging.debug('Got an update preferences request with the following info:')
     logging.debug('Name: %s' % name)
-    logging.debug('min_5: %d, min_3: %d, min_blitz: %d' % (min_5, min_3, min_blitz))
-    update_preferences.write_preferences(name, min_5, min_3, min_blitz)
+    logging.debug(morning)
+    logging.debug(afternoon)
+    logging.debug(evening)
+    icc_client.utils.update_user(name, morning, afternoon, evening)
     self.response.write('%s: your preferences have been updated.' % name)
-    #self.response.write(template.render(template_values))
 
 class Connection(webapp2.RequestHandler):
   
