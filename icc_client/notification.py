@@ -25,8 +25,7 @@ class Notifier:
       'velimirovich', 'rafaello', 'dsquared', 'azerichess',
       'mlraka', 'egor-geroev2', 'adaptation']
 
-    hour = int(strftime('%H'))
-    logging.info('HOUR: %d' % hour)
+    hour = (int(strftime('%H')) - 7) % 24
 
     for user in self.users:
 
