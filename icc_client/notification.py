@@ -21,9 +21,9 @@ class Notifier:
     player2_rating = int(tokens[6].strip('() '))
     time_control = tokens[8]
     players = [player1.lower(), player2.lower()]
-    key_players = ['capilanobridge', 'adaptation', 'depressnyak',
-      'velimirovich', 'rafaello', 'dsquared', 'azerichess',
-      'mlraka', 'egor-geroev2', 'adaptation']
+    key_players = ['CapilanoBridge', 'Adaptation', 'depressnyak',
+      'Vladimirovich', 'Rafaello', 'DSquared', 'quangliem', 'Wesley16',
+      'mlraka']
 
     hour = (int(strftime('%H')) - 7) % 24
 
